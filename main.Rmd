@@ -11,11 +11,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 You should create one R script called run_analysis.R that does the following.
 
-1. Merges the training and the test sets to create one data set.
-2. Extracts only the measurements on the mean and standard deviation for each measurement.
+1. Merges the training and the test sets to create one data set
+2. Extracts only the measurements on the mean and standard deviation for each measurement
 3. Uses descriptive activity names to name the activities in the data set
-4. Appropriately labels the data set with descriptive variable names.
-5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
+4. Appropriately labels the data set with descriptive variable names
+5. From the data set in step 4, create a second, independent tidy data set with the average of each variable for each activity and each subject
 
 # Solutions
 
@@ -26,7 +26,7 @@ X_train <- read.table("train/X_train.txt")
 y_train <- read.table("train/y_train.txt")
 subject_train <- read.table("train/subject_train.txt")
 train <- cbind(subject_train, y_train, X_train)
-train
+# train
 ```
 
 ```{r}
@@ -34,12 +34,12 @@ X_test <- read.table("test/X_test.txt")
 y_test <- read.table("test/y_test.txt")
 subject_test <- read.table("test/subject_test.txt")
 test <- cbind(subject_test, y_test, X_test)
-test
+# test
 ```
 
 ```{r}
 DF <- rbind(train, test)
-DF
+# DF
 ```
 
 ## Extracts only the measurements on the mean and standard deviation for each measurement
@@ -47,8 +47,50 @@ DF
 ```{r}
 featuresDF <- read.table("features.txt")
 features <- c("subject-id","activity-name",as.character.factor(featuresDF[,2]))
-features
+# features
 colnames(DF) <- features
 head(DF)
+```
+
+```{r}
+toExtract <- grep(pattern = "mean|std", x = features)
+DFmeanstd <- DF[,c(1,2,toExtract)]
+features_DF2 <- colnames(DFmeanstd)
+```
+
+## Uses descriptive activity names to name the activities in the data set
+
+```{r}
+DFmeanstd$`activity-name` <- sapply(as.character(DFmeanstd[,2]), switch, 
+                                    "1" = "WALKING",
+                                    "2" = "WALKING_UPSTAIRS", 
+                                    "3" = "WALKING_DOWNSTAIRS",
+                                    "4" = "SITTING",
+                                    "5" = "STANDING",
+                                    "6" = "LAYING")
+```
+
+## Appropriately labels the data set with descriptive variable names
+
+```{r}
+featuresDescr <- features_DF2 %>% gsub(pattern = "-", replacement = ".", x = .) %>% 
+     gsub(pattern = "\\(\\)", replacement = "", x = .) %>% 
+     gsub(pattern = "^t", replacement = "time", x = .) %>% 
+     # gsub(pattern = "\\(t", replacement = "(time", x = .) %>% 
+     gsub(pattern = "^f", replacement = "freq", x = .) #%>% 
+     # gsub(pattern = "\\.correlation", replacement = ".corr", x = .)
+colnames(DFmeanstd) <- featuresDescr
+head(DFmeanstd)
+```
+
+## From the data set in step 4, create a second, independent tidy data set with the average of each variable for each activity and each subject
+
+```{r}
+library(tidyverse)
+DFsecond <- DFmeanstd %>% 
+     group_by(subject.id, activity.name) %>% 
+     summarise_each(funs = mean) %>% 
+     ungroup()
+DFsecond
 ```
 

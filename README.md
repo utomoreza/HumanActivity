@@ -23,5 +23,6 @@ DITEN - Universit? degli Studi di Genova.
 Via Opera Pia 11A, I-16145, Genoa, Italy.
 activityrecognition@smartlab.ws
 www.smartlab.ws
-[UCI ML Repo](http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones)
-[UCI on Kaggle](https://www.kaggle.com/uciml/human-activity-recognition-with-smartphones)
+[Dataset on UCI ML Repo Version 1.0](http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones)
+[Dataset on UCI ML Repo Version 2.0](http://archive.ics.uci.edu/ml/datasets/Smartphone-Based+Recognition+of+Human+Activities+and+Postural+Transitions)
+[Dataset on Kaggle](https://www.kaggle.com/uciml/human-activity-recognition-with-smartphones)
